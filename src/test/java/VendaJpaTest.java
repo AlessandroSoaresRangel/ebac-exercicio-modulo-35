@@ -252,7 +252,7 @@ public class VendaJpaTest {
 
         vendaDao.finalizarVenda(venda);
 
-        Venda vendaConsultada = vendaDao.consultarJpa(retorno.getId());
+        VendaJpa vendaConsultada = vendaDao.consultarJpa(retorno.getId());
         assertEquals(venda.getCodigo(), vendaConsultada.getCodigo());
         assertEquals(VendaJpa.Status.CONCLUIDA, vendaConsultada.getStatus());
     }

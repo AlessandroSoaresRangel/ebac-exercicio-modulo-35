@@ -10,13 +10,22 @@ import org.example.exceptions.TipoChaveNaoEncontradaException;
 import java.util.Collection;
 import java.util.List;
 
+
+
 public class GenericDaoJpa <T, E> implements IGenericDaoJpa <T, E> {
     private EntityManagerFactory factory;
+    private final String PERSISTENCE_UNIT_NAME = "postgres1";
     protected EntityManager manager;
     private Class<T> persistentClass;
+    private String persistentUnitName;
 
-    public GenericDaoJpa (Class<T> persistentClass) {
+    public GenericDaoJpa (Class<T> persistentClass, String persistentUnitName) {
             this.persistentClass = persistentClass;
+            this.persistentUnitName = persistentUnitName;
+    }
+
+    public GenericDaoJpa(Class<T> persistentClass) {
+        this.persistentClass = persistentClass;
     }
 
     @Override
@@ -62,7 +71,7 @@ public class GenericDaoJpa <T, E> implements IGenericDaoJpa <T, E> {
     }
 
     protected void abrirConeccao() {
-        this.factory = Persistence.createEntityManagerFactory("projeto4");
+        this.factory = Persistence.createEntityManagerFactory(this.getPersistentUnitName());
         this.manager = this.factory.createEntityManager();
         manager.getTransaction().begin();
     }
@@ -78,5 +87,13 @@ public class GenericDaoJpa <T, E> implements IGenericDaoJpa <T, E> {
         sb.append(this.persistentClass.getSimpleName());
         sb.append(" obj");
         return sb.toString();
+    }
+
+    private String getPersistentUnitName() {
+        if(this.persistentUnitName != null && !this.persistentUnitName.isEmpty()) {
+            return persistentUnitName;
+        }else {
+            return PERSISTENCE_UNIT_NAME;
+        }
     }
 }
